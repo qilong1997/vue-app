@@ -1,0 +1,147 @@
+<template>
+  <div class="bullet-wrap" ref="bulletWrap">
+    <div
+      class="bullet-item"
+      :class="play"
+      v-for="(item, index) in showingBullets"
+      :key="item.id + index"
+      :data-line="item.line"
+    >
+      <img :src="logo" alt="" />
+      <span>xxx在{{ item.name }}</span>
+    </div>
+    <button @click="handleStopAoPlay">暂停/播放</button>
+  </div>
+</template>
+
+<script>
+import cloneDeep from "lodash/cloneDeep";
+import logo from "../assets/logo.png";
+
+const getUUID = () => Math.random() + Math.random();
+export default {
+  data() {
+    return {
+      // 将要显示的弹幕队列
+      waitBullets: [
+        { id: 1, name: "一场说走就走的旅行", line: 0 },
+        { id: 2, name: "结束单身汪", line: 0 },
+        { id: 3, name: "明年暴瘦10斤", line: 0 },
+        { id: 4, name: "多陪伴父母", line: 0 },
+        { id: 5, name: "赚到1个亿,买别墅", line: 0 },
+      ],
+      waitBullets1: [
+        { id: getUUID(), name: "一场说走就走的旅行", line: 0 },
+        { id: getUUID(), name: "结束单身汪", line: 0 },
+        { id: getUUID(), name: "明年暴瘦10斤", line: 0 },
+        { id: getUUID(), name: "多陪伴父母", line: 0 },
+        { id: getUUID(), name: "赚到1个亿,买别墅", line: 0 },
+      ],
+      showingBullets: [],
+      lines: 2,
+      currentLine: 0,
+      logo,
+      play: "active",
+    };
+  },
+  mounted() {
+    this.showNextBullet();
+    this.timer = setInterval(this.showNextBullet, 1000);
+  },
+  methods: {
+    showNextBullet() {
+      if (!this.waitBullets.length) {
+        this.waitBullets = cloneDeep(this.waitBullets1);
+
+        return;
+      }
+      /**
+       * 由于会一直往 showingBullets 追加数据，导致页面上的元素会越来越多
+       * 直接清空 showingBullets 会导致后面的几个弹幕直接消失
+       * 使用shift或者splice会使弹幕从头开始执行
+       * 所以在这里判断如果已经走过的弹幕总数 > 当前弹幕再往后走10个 就从最开始移除元素
+       */
+      if (this.showingBullets.length > this.waitBullets1.length + 10) {
+        const firstChild = this.$refs.bulletWrap.children[0];
+        if (this.$refs.bulletWrap && firstChild) {
+          this.$refs.bulletWrap.removeChild(firstChild);
+        }
+      }
+      // 先确定弹道，跟上一个弹道错开即可
+      this.currentLine = (this.currentLine % this.lines) + 1;
+      // 从等待集合里取出第一个
+      const currentBullet = this.waitBullets.shift();
+      // 设置弹幕的弹道
+      currentBullet.line = this.currentLine;
+      // 弹幕放进显示集合里，弹幕开始滚动
+      this.showingBullets.push(currentBullet);
+    },
+    handleStopAoPlay() {
+      if (this.play === "active") {
+        this.play = "paused";
+        clearInterval(this.timer);
+      } else {
+        this.play = "active";
+        this.showNextBullet();
+        this.timer = setInterval(this.showNextBullet, 1000);
+      }
+      console.log(this.play);
+    },
+  },
+};
+</script>
+
+<style>
+body {
+  margin: 0;
+}
+.bullet-wrap {
+  height: rpx(130);
+  background-color: #aaa;
+  position: relative;
+}
+.bullet-item {
+  position: absolute;
+  width: 200px;
+  background-color: chartreuse;
+  border-radius: 12px;
+  padding: 4px 2px;
+  animation: rightToLeft 4s linear both;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+.active {
+  animation-play-state: running;
+}
+.paused {
+  animation-play-state: paused;
+}
+.bullet-item img {
+  width: 30px;
+  margin-right: 12px;
+}
+.bullet-item[data-line="1"] {
+  top: 0;
+}
+.bullet-item[data-line="2"] {
+  top: 75px;
+}
+.bullet-item[data-line="3"] {
+  top: 150px;
+}
+.bullet-item[data-line="4"] {
+  top: 225px;
+}
+.bullet-item[data-line="5"] {
+  top: 300px;
+}
+@keyframes rightToLeft {
+  0% {
+    transform: translate(100vw);
+  }
+  100% {
+    transform: translate(-100%);
+  }
+}
+</style>

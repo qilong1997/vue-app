@@ -1,0 +1,72 @@
+<template>
+  <div class="box">
+    <vue-danmaku
+      ref="danmaku"
+      :danmus="danmus"
+      useSlot
+      loop
+      :speeds="50"
+      :channels="2"
+      style="height: 400px"
+    >
+      <!-- 弹幕插槽（vue 2.6.0 及以上版本可使用 v-slot:dm="{ index, danmu }"语法） -->
+      <template slot="dm" slot-scope="{ index, danmu }">
+        <div class="fl" :style="{ marginLeft: renderNum() }">
+          <img src="../assets/logo.png" />
+          <span>{{ index }}{{ danmu.name }}--{{ danmu.text }}</span>
+        </div>
+        <!-- <span>{{ index }}{{ danmu.name }}：{{ danmu.text }}</span> -->
+      </template>
+      <!-- 容器插槽 -->
+      <div></div>
+    </vue-danmaku>
+    <button @click="handleStop">暂停</button>
+  </div>
+</template>
+
+<script>
+import vueDanmaku from "vue-danmaku";
+export default {
+  components: {
+    vueDanmaku,
+  },
+  data() {
+    return {
+      danmus: [
+        { avatar: "../assets/logo.png", name: "a", text: "aaa" },
+        { avatar: "../assets/logo.png", name: "b", text: "bbb" },
+        { avatar: "../assets/logo.png", name: "c", text: "ccc" },
+        { avatar: "../assets/logo.png", name: "d", text: "ddd" },
+        { avatar: "../assets/logo.png", name: "e", text: "eee" },
+      ],
+    };
+  },
+  methods: {
+    handleStop() {
+      this.$refs.danmaku.pause();
+    },
+    renderNum() {
+      return Math.ceil(Math.random() * 60) + 100 + "px";
+    },
+  },
+};
+</script>
+
+<style scoped>
+.box {
+  width: 100%;
+  height: 400px;
+  color: black !important;
+}
+.fl {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: red !important;
+  padding: 0 10px 0 2px;
+  border-radius: 12px;
+}
+.fl >>> img {
+  width: 30px;
+}
+</style>
