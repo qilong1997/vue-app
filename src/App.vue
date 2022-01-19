@@ -11,6 +11,7 @@
     </transition>
     <button @click="handleChange">切换</button>
     <button @click="handleAdd">count++</button>
+    <com-3></com-3>
   </div>
 </template>
 

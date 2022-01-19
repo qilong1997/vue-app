@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "lodash": "^4.17.21",
+    "sass-loader": "^12.4.0",
     "vue": "^2.6.11",
     "vue-danmaku": "^1.2.0",
     "vuex": "^3.6.2"

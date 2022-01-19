@@ -2,6 +2,8 @@
 // export const Com2 = () => import('./Com2.vue')
 const path = require('path')
 const files = require.context('./', false, /\.vue$/)
+console.dir(files.resolve('./Com1.vue'));
+console.dir(files.id);
 console.dir(files.keys());
 const modules = {}
 files.keys().forEach(key => {
