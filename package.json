@@ -5,7 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy:dev": "deploy-cli-service deploy --mode dev",
+    "deploy:test": "deploy-cli-service deploy --mode test",
+    "deploy:prod": "deploy-cli-service deploy --mode prod"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -20,6 +23,7 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
+    "deploy-cli-service": "^1.3.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-template-compiler": "^2.6.11"
